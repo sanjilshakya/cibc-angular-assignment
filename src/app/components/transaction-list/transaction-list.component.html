@@ -1,29 +1,56 @@
 <h1>Transactions</h1>
+<div class="card mb-2">
+    <div class="card-header">
+        Advance Filter
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-3">
+                <label for="from">From</label>
+                <input type="date" class="form-control" id="from">
+            </div>
+            <div class="col-3">
+                <label for="from">To</label>
+                <input type="date" class="form-control" id="to">
+            </div>
+        </div>
+        <button class="btn btn-primary">Filter</button>
+    </div>
+</div>
+<button class="btn btn-secondary" style="float: right;" (click)="goToTransactionDetail()">Add Transaction</button>
 <table class="table">
     <thead>
         <tr>
-            <th scope="col">ID</th>
-            <th scope="col">Date</th>
-            <th scope="col">Comments</th>
-            <th scope="col">Action</th>
+            <th>ID</th>
+            <th (click)="sortByDate()" style="cursor: pointer;">Date
+                <!-- up arrow icon-->
+                <span *ngIf="sortBy==='asc'">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                        class="bi bi-arrow-up" viewBox="0 0 16 16">
+                        <path fill-rule="evenodd"
+                            d="M8 15a.5.5 0 0 0 .5-.5V2.707l3.146 3.147a.5.5 0 0 0 .708-.708l-4-4a.5.5 0 0 0-.708 0l-4 4a.5.5 0 1 0 .708.708L7.5 2.707V14.5a.5.5 0 0 0 .5.5z" />
+                    </svg>
+                </span>
+                <!-- down arrow icon-->
+                <span *ngIf="sortBy==='desc'">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                        class="bi bi-arrow-down" viewBox="0 0 16 16">
+                        <path fill-rule="evenodd"
+                            d="M8 1a.5.5 0 0 1 .5.5v11.793l3.146-3.147a.5.5 0 0 1 .708.708l-4 4a.5.5 0 0 1-.708 0l-4-4a.5.5 0 0 1 .708-.708L7.5 13.293V1.5A.5.5 0 0 1 8 1z" />
+                    </svg>
+                </span>
+            </th>
+            <th>Comments</th>
+            <th>Action</th>
         </tr>
     </thead>
     <tbody>
-        <tr>
-            <td>1</td>
-            <td>01/10/2023</td>
-            <td>Utility Bill</td>
+        <tr *ngFor="let transaction of transactions">
+            <td>{{transaction?.id}}</td>
+            <td>{{transaction?.date | date:'MM/dd/yyyy'}}</td>
+            <td>{{transaction?.Comments}}</td>
             <td>
-                <button type="button" class="btn btn-link" (click)="goToTransactionDetail(1)">View</button>
-            </td>
-        </tr>
-        <tr>
-            <td>2</td>
-            <td>01/11/2023</td>
-            <td>Grocery</td>
-            <td>
-                <button type="button" class="btn btn-link" (click)="goToTransactionDetail(2)">View</button>
-
+                <button type="button" class="btn btn-link" (click)="goToTransactionDetail(transaction)">View</button>
             </td>
         </tr>
     </tbody>

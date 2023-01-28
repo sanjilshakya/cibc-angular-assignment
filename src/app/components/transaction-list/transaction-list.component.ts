@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { TransactionService } from 'src/app/services';
 
 @Component({
   selector: 'app-transaction-list',
@@ -8,13 +9,32 @@ import { Router } from '@angular/router';
 })
 export class TransactionListComponent implements OnInit {
 
-  constructor(private router: Router) { }
+  transactions: any;
+  sortBy = 'asc'
+
+  constructor(private router: Router,
+    private transactionService: TransactionService) { }
 
   ngOnInit(): void {
+    this.getTransactions()
   }
 
-  goToTransactionDetail(id: number) {
-    this.router.navigate(['transactions/' + id])
+  getTransactions() {
+    this.transactionService.getAll()
+      .subscribe({
+        next: (res) => {
+          this.transactions = res
+        },
+        error: (e) => console.error(e)
+      })
+  }
+
+  goToTransactionDetail(transaction?: any) {
+    transaction ? this.router.navigate(['transactions/' + transaction.id]) : this.router.navigate(['transactions/create'])
+  }
+
+  sortByDate() {
+    this.sortBy = this.sortBy === 'asc' ? 'desc' : 'asc'
   }
 
 }
