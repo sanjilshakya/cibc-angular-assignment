@@ -6,3 +6,8 @@ input, textarea{
 button{
     margin-right: 5px;
 }
+
+input:read-only{
+    cursor: not-allowed;
+    background-color:#E8E8E8;
+}
