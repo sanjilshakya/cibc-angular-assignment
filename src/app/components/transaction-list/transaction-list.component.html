@@ -4,20 +4,24 @@
         Advance Filter
     </div>
     <div class="card-body">
-        <div class="row">
-            <div class="col-3">
-                <label for="from">From</label>
-                <input type="date" class="form-control" id="from">
+        <form [formGroup]="form">
+            <div class="row">
+                <div class="col-3">
+                    <label for="from">From</label>
+                    <input type="date" class="form-control" id="from" formControlName="startDate">
+                </div>
+                <div class="col-3">
+                    <label for="from">To</label>
+                    <input type="date" class="form-control" id="to" formControlName="endDate">
+                </div>
             </div>
-            <div class="col-3">
-                <label for="from">To</label>
-                <input type="date" class="form-control" id="to">
-            </div>
-        </div>
-        <button class="btn btn-primary">Filter</button>
+            <button class="btn btn-primary" (click)="filterTransactions()">Filter</button>
+        </form>
     </div>
 </div>
-<button class="btn btn-secondary" style="float: right;" (click)="goToTransactionDetail()">Add Transaction</button>
+<div>
+    <button class="btn btn-secondary" (click)="goToTransactionDetail()">Add Transaction</button>
+</div>
 <table class="table">
     <thead>
         <tr>
@@ -44,10 +48,13 @@
             <th>Action</th>
         </tr>
     </thead>
-    <tbody>
+    <div *ngIf="loading">
+        <app-loader [loader]="loading"></app-loader>
+    </div>
+    <tbody *ngIf="!loading">
         <tr *ngFor="let transaction of transactions">
             <td>{{transaction?.id}}</td>
-            <td>{{transaction?.date | date:'MM/dd/yyyy'}}</td>
+            <td>{{transaction?.date | date:'dd/MM/yyyy'}}</td>
             <td>{{transaction?.Comments}}</td>
             <td>
                 <button type="button" class="btn btn-link" (click)="goToTransactionDetail(transaction)">View</button>
