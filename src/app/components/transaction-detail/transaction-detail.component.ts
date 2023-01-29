@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TransactionService } from 'src/app/services';
 import * as moment from 'moment';
+import { finalize } from 'rxjs';
 
 @Component({
   selector: 'app-transaction-detail',
@@ -19,6 +20,7 @@ export class TransactionDetailComponent implements OnInit {
   }
 
   id: any;
+  loading = false;
   transactionForm!: FormGroup;
 
   ngOnInit(): void {
@@ -37,10 +39,12 @@ export class TransactionDetailComponent implements OnInit {
   }
 
   getTransactionDetail(id: any) {
+    this.loading = true;
     this.transactionService.getById(id)
+      .pipe(finalize(() => { this.loading = false; }))
       .subscribe({
         next: (res) => {
-          res.date = moment(new Date(res.date)).format('MM/DD/YYYY')
+          res.date = moment(new Date(res.date)).format("YYYY-MM-DD")
           this.transactionForm.patchValue(res)
         },
         error: (e) => console.error(e)
