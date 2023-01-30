@@ -18,8 +18,7 @@ import { icons } from './constants/icon.constant'
     components.TransactionListComponent,
     components.TransactionDetailComponent,
     components.NotFoundComponent,
-    components.LoaderComponent,
-    components.ToasterComponent
+    components.LoaderComponent
   ],
   imports: [
     BrowserModule,
