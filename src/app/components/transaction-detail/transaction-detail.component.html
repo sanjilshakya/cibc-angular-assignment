@@ -43,7 +43,7 @@
         <div class="form-group">
             <label for="comments">Comments<span class="required-field"> *</span></label>
             <textarea class="form-control" id="comments" rows="3" formControlName="Comments" [patterns]="customPatterns"
-                mask="A*">
+                mask="A*" [dropSpecialCharacters]="false">
         </textarea>
         </div>
     </form>
