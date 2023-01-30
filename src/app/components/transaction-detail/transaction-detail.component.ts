@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TransactionService } from 'src/app/services';
+import { senders, recipients, status } from '../../constants/mock-data.constant';
 import * as moment from 'moment';
 import { finalize } from 'rxjs';
 
@@ -22,6 +23,9 @@ export class TransactionDetailComponent implements OnInit {
   id: any;
   loading = false;
   transactionForm!: FormGroup;
+  senders = senders;
+  recipients = recipients;
+  status = status;
 
   ngOnInit(): void {
     this.id = this.route.snapshot.paramMap.get('id');
@@ -34,6 +38,9 @@ export class TransactionDetailComponent implements OnInit {
       _id: null,
       id: null,
       date: [null, Validators.required],
+      sender: [null, Validators.required],
+      recipient: [null, Validators.required],
+      status: [null, Validators.required],
       Comments: [null, Validators.required]
     })
   }
