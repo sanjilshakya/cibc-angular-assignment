@@ -1,13 +1,18 @@
 /* You can add global styles to this file, and also import other style files */
-input, textarea{
+input,
+textarea {
     margin: 10px 0px;
 }
 
-button{
+button {
     margin-right: 5px;
 }
 
-input:read-only{
+input:read-only {
     cursor: not-allowed;
-    background-color:#E8E8E8;
+    background-color: #E8E8E8;
+}
+
+th.table-sort {
+    cursor: pointer;
 }

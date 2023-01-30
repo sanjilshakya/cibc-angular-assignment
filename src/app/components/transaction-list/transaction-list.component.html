@@ -7,15 +7,19 @@
         <form [formGroup]="form">
             <div class="row">
                 <div class="col-3">
-                    <label for="from">From</label>
-                    <input type="date" class="form-control" id="from" formControlName="startDate">
+                    <label for="from">From Date *</label>
+                    <input type="date" class="form-control" id="from" formControlName="startDate" (change)="checkDate()"
+                        [max]="minDate">
                 </div>
                 <div class="col-3">
                     <label for="from">To</label>
-                    <input type="date" class="form-control" id="to" formControlName="endDate">
+                    <input type="date" class="form-control" id="to" formControlName="endDate" (change)="checkDate()"
+                        [min]="maxDate">
                 </div>
             </div>
-            <button class="btn btn-primary" (click)="filterTransactions()">Filter</button>
+            <button class="btn btn-primary" (click)="filterTransactions()" [disabled]="form.invalid">Filter</button>
+            <button class="btn btn-secondary" (click)="clearForm()"
+                [disabled]="!(form.value.startDate || form.value.startDate)">Clear</button>
         </form>
     </div>
 </div>
@@ -25,33 +29,73 @@
 <table class="table">
     <thead>
         <tr>
-            <th>ID</th>
-            <th (click)="sortByDate()" style="cursor: pointer;">Date
-                <!-- up arrow icon-->
-                <span *ngIf="sortBy==='asc'">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                        class="bi bi-arrow-up" viewBox="0 0 16 16">
-                        <path fill-rule="evenodd"
-                            d="M8 15a.5.5 0 0 0 .5-.5V2.707l3.146 3.147a.5.5 0 0 0 .708-.708l-4-4a.5.5 0 0 0-.708 0l-4 4a.5.5 0 1 0 .708.708L7.5 2.707V14.5a.5.5 0 0 0 .5.5z" />
-                    </svg>
-                </span>
-                <!-- down arrow icon-->
-                <span *ngIf="sortBy==='desc'">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                        class="bi bi-arrow-down" viewBox="0 0 16 16">
-                        <path fill-rule="evenodd"
-                            d="M8 1a.5.5 0 0 1 .5.5v11.793l3.146-3.147a.5.5 0 0 1 .708.708l-4 4a.5.5 0 0 1-.708 0l-4-4a.5.5 0 0 1 .708-.708L7.5 13.293V1.5A.5.5 0 0 1 8 1z" />
-                    </svg>
+            <th class="table-sort" (click)="sort('id')">ID
+                <span *ngIf="searchQuery.sortBy ==='id'">
+                    <!-- up arrow icon-->
+                    <span *ngIf="searchQuery.sortType==='asc'">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                            class="bi bi-arrow-up" viewBox="0 0 16 16">
+                            <path fill-rule="evenodd"
+                                d="M8 15a.5.5 0 0 0 .5-.5V2.707l3.146 3.147a.5.5 0 0 0 .708-.708l-4-4a.5.5 0 0 0-.708 0l-4 4a.5.5 0 1 0 .708.708L7.5 2.707V14.5a.5.5 0 0 0 .5.5z" />
+                        </svg>
+                    </span>
+                    <!-- down arrow icon-->
+                    <span *ngIf="searchQuery.sortType==='desc'">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                            class="bi bi-arrow-down" viewBox="0 0 16 16">
+                            <path fill-rule="evenodd"
+                                d="M8 1a.5.5 0 0 1 .5.5v11.793l3.146-3.147a.5.5 0 0 1 .708.708l-4 4a.5.5 0 0 1-.708 0l-4-4a.5.5 0 0 1 .708-.708L7.5 13.293V1.5A.5.5 0 0 1 8 1z" />
+                        </svg>
+                    </span>
                 </span>
             </th>
-            <th>Comments</th>
+            <th class="table-sort" (click)="sort('date')">Date
+                <span *ngIf="searchQuery.sortBy ==='date'">
+                    <!-- up arrow icon-->
+                    <span *ngIf="searchQuery.sortType==='asc'">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                            class="bi bi-arrow-up" viewBox="0 0 16 16">
+                            <path fill-rule="evenodd"
+                                d="M8 15a.5.5 0 0 0 .5-.5V2.707l3.146 3.147a.5.5 0 0 0 .708-.708l-4-4a.5.5 0 0 0-.708 0l-4 4a.5.5 0 1 0 .708.708L7.5 2.707V14.5a.5.5 0 0 0 .5.5z" />
+                        </svg>
+                    </span>
+                    <!-- down arrow icon-->
+                    <span *ngIf="searchQuery.sortType==='desc'">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                            class="bi bi-arrow-down" viewBox="0 0 16 16">
+                            <path fill-rule="evenodd"
+                                d="M8 1a.5.5 0 0 1 .5.5v11.793l3.146-3.147a.5.5 0 0 1 .708.708l-4 4a.5.5 0 0 1-.708 0l-4-4a.5.5 0 0 1 .708-.708L7.5 13.293V1.5A.5.5 0 0 1 8 1z" />
+                        </svg>
+                    </span>
+                </span>
+            </th>
+            <th class="table-sort" (click)="sort('Comments')">Comments
+                <span *ngIf="searchQuery.sortBy ==='Comments'">
+                    <!-- up arrow icon-->
+                    <span *ngIf="searchQuery.sortType==='asc'">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                            class="bi bi-arrow-up" viewBox="0 0 16 16">
+                            <path fill-rule="evenodd"
+                                d="M8 15a.5.5 0 0 0 .5-.5V2.707l3.146 3.147a.5.5 0 0 0 .708-.708l-4-4a.5.5 0 0 0-.708 0l-4 4a.5.5 0 1 0 .708.708L7.5 2.707V14.5a.5.5 0 0 0 .5.5z" />
+                        </svg>
+                    </span>
+                    <!-- down arrow icon-->
+                    <span *ngIf="searchQuery.sortType==='desc'">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                            class="bi bi-arrow-down" viewBox="0 0 16 16">
+                            <path fill-rule="evenodd"
+                                d="M8 1a.5.5 0 0 1 .5.5v11.793l3.146-3.147a.5.5 0 0 1 .708.708l-4 4a.5.5 0 0 1-.708 0l-4-4a.5.5 0 0 1 .708-.708L7.5 13.293V1.5A.5.5 0 0 1 8 1z" />
+                        </svg>
+                    </span>
+                </span>
+            </th>
             <th>Action</th>
         </tr>
     </thead>
     <div *ngIf="loading">
         <app-loader [loader]="loading"></app-loader>
     </div>
-    <tbody *ngIf="!loading">
+    <tbody *ngIf="!loading && transactions.length > 0">
         <tr *ngFor="let transaction of transactions">
             <td>{{transaction?.id}}</td>
             <td>{{transaction?.date | date:'dd/MM/yyyy'}}</td>
@@ -61,4 +105,5 @@
             </td>
         </tr>
     </tbody>
+    <div *ngIf="!loading && transactions.length === 0">No Transaction Available.</div>
 </table>

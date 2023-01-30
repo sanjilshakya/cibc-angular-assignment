@@ -2,7 +2,7 @@ import { Recipient } from "./recipient.interface";
 import { Sender } from "./sender.interface";
 
 export interface Transaction {
-    id: string;
+    id: number;
     date: Date
     sender: Sender,
     recipient: Recipient,

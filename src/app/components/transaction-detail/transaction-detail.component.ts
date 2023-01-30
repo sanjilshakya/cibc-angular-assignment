@@ -53,7 +53,7 @@ export class TransactionDetailComponent implements OnInit {
 
   submit() {
     const reqBody = JSON.parse(JSON.stringify(this.transactionForm.value))
-    !reqBody._id && (reqBody.date = new Date(reqBody.date).getTime())
+    reqBody.date = new Date(reqBody.date + 'T00:00:00').getTime()
     const request = reqBody._id ? this.transactionService.update(reqBody) : this.transactionService.create(reqBody)
     request.subscribe({
       next: (res) => {

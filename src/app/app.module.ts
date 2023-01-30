@@ -14,7 +14,8 @@ import { HttpClientModule } from '@angular/common/http';
     components.TransactionListComponent,
     components.TransactionDetailComponent,
     components.NotFoundComponent,
-    components.LoaderComponent
+    components.LoaderComponent,
+    components.ToasterComponent
   ],
   imports: [
     BrowserModule,
