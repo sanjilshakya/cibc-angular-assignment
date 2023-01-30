@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TransactionService } from 'src/app/services';
 import { senders, recipients, status } from '../../constants/mock-data.constant';
@@ -26,7 +26,7 @@ export class TransactionDetailComponent implements OnInit {
   senders = senders;
   recipients = recipients;
   status = status;
-  public customPatterns = { 'A': { pattern: new RegExp('\[A-Za-z0-9 _]')} };
+  public customPatterns = { 'A': { pattern: new RegExp('\[A-Za-z0-9 _]') } };
 
   ngOnInit(): void {
     this.id = this.route.snapshot.paramMap.get('id');
