@@ -26,6 +26,7 @@ export class TransactionDetailComponent implements OnInit {
   senders = senders;
   recipients = recipients;
   status = status;
+  public customPatterns = { 'A': { pattern: new RegExp('\[A-Za-z0-9 _]')} };
 
   ngOnInit(): void {
     this.id = this.route.snapshot.paramMap.get('id');
