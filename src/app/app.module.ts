@@ -32,6 +32,7 @@ import { icons } from './constants/icon.constant'
   providers: [
     services.HttpService,
     services.TransactionService,
+    services.DataService,
   ],
   bootstrap: [AppComponent]
 })

@@ -4,9 +4,12 @@ import { AppComponent } from './app.component';
 import * as components from './components';
 
 const routes: Routes = [
-  { path: 'transactions', component: components.TransactionListComponent },
+  {
+    path: 'transactions', component: components.TransactionListComponent,
+    children: [{ path: ':id', component: components.TransactionDetailComponent }]
+  },
   { path: '', redirectTo: '/transactions', pathMatch: 'full' },
-  { path: 'transactions/:id', component: components.TransactionDetailComponent },
+  // { path: 'transactions/:id', component: components.TransactionDetailComponent },
   { path: '**', component: components.NotFoundComponent }
 ];
 

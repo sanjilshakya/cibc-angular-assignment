@@ -1,101 +1,107 @@
-<h1>Transactions</h1>
-<div class="card mb-2">
-    <div class="card-header">
-        Advance Filter
-    </div>
-    <div class="card-body">
-        <form [formGroup]="form">
-            <div class="row">
-                <div class="col-3">
-                    <label for="from">From Date<span class="required-field"> *</span></label>
-                    <input type="date" class="form-control" id="from" formControlName="startDate" (change)="checkDate()"
-                        [max]="minDate">
+<div *ngIf="!showChildOnly">
+    <h1>Transactions</h1>
+    <div class="card mb-2">
+        <div class="card-header">
+            Advance Filter
+        </div>
+        <div class="card-body">
+            <form [formGroup]="form">
+                <div class="row">
+                    <div class="col-3">
+                        <label for="from">From Date<span class="required-field"> *</span></label>
+                        <input type="date" class="form-control" id="from" formControlName="startDate"
+                            (change)="checkDate()" [max]="minDate">
+                    </div>
+                    <div class="col-3">
+                        <label for="from">To</label>
+                        <input type="date" class="form-control" id="to" formControlName="endDate" (change)="checkDate()"
+                            [min]="maxDate">
+                    </div>
                 </div>
-                <div class="col-3">
-                    <label for="from">To</label>
-                    <input type="date" class="form-control" id="to" formControlName="endDate" (change)="checkDate()"
-                        [min]="maxDate">
-                </div>
-            </div>
-            <button class="btn btn-primary" (click)="filterTransactions()" [disabled]="form.invalid">Filter</button>
-            <button class="btn btn-secondary" (click)="clearForm()"
-                [disabled]="!(form.value.startDate || form.value.startDate)">Clear</button>
-        </form>
+                <button class="btn btn-primary" (click)="filterTransactions()" [disabled]="form.invalid">Filter</button>
+                <button class="btn btn-secondary" (click)="clearForm()"
+                    [disabled]="!(form.value.startDate || form.value.startDate)">Clear</button>
+            </form>
+        </div>
     </div>
-</div>
 
-<div class="mb-2 d-flex justify-content-end">
-    <button class="btn btn-secondary" (click)="goToTransactionDetail()"><i-bs name="plus"></i-bs> Create</button>
-</div>
-
-<table class="table table-hover table-bordered">
-    <thead>
-        <tr>
-            <th class="table-sort" (click)="sort('id')">ID
-                <span *ngIf="searchQuery.sortBy ==='id'">
-                    <span *ngIf="searchQuery.sortType==='asc'">
-                        <i-bs name="arrow-up"></i-bs>
-                    </span>
-                    <span *ngIf="searchQuery.sortType==='desc'">
-                        <i-bs name="arrow-down"></i-bs>
-                    </span>
-                </span>
-            </th>
-            <th class="table-sort" (click)="sort('date')">Date
-                <span *ngIf="searchQuery.sortBy ==='date'">
-                    <!-- up arrow icon-->
-                    <span *ngIf="searchQuery.sortType==='asc'">
-                        <i-bs name="arrow-up"></i-bs>
-                    </span>
-                    <!-- down arrow icon-->
-                    <span *ngIf="searchQuery.sortType==='desc'">
-                        <i-bs name="arrow-down"></i-bs>
-                    </span>
-                </span>
-            </th>
-            <th class="table-sort" (click)="sort('Comments')">Comments
-                <span *ngIf="searchQuery.sortBy ==='Comments'">
-                    <span *ngIf="searchQuery.sortType==='asc'">
-                        <i-bs name="arrow-up"></i-bs>
-                    </span>
-                    <span *ngIf="searchQuery.sortType==='desc'">
-                        <i-bs name="arrow-down"></i-bs>
-                    </span>
-                </span>
-            </th>
-            <th [width]="150" class="table-sort" (click)="sort('status')">Status
-                <span *ngIf="searchQuery.sortBy ==='status'">
-                    <span *ngIf="searchQuery.sortType==='asc'">
-                        <i-bs name="arrow-up"></i-bs>
-                    </span>
-                    <span *ngIf="searchQuery.sortType==='desc'">
-                        <i-bs name="arrow-down"></i-bs>
-                    </span>
-                </span>
-            </th>
-            <th [width]="130">Action</th>
-        </tr>
-    </thead>
-    <div *ngIf="loading">
-        <app-loader [loader]="loading"></app-loader>
+    <div class="mb-2 d-flex justify-content-end">
+        <button class="btn btn-secondary" (click)="goToTransactionDetail()"><i-bs name="plus"></i-bs> Create</button>
     </div>
-    <tbody *ngIf="!loading && transactions.length > 0">
-        <tr *ngFor="let transaction of transactions">
-            <td>{{transaction?.id}}</td>
-            <td>{{transaction?.date | date:'dd/MM/yyyy'}}</td>
-            <td>{{transaction?.Comments}}</td>
-            <td>
-                <span class="badge rounded-pill" [ngClass]="{'text-bg-success': transaction?.status ==='COMPLETED', 
+
+    <table class="table table-hover table-bordered">
+        <thead>
+            <tr>
+                <th class="table-sort" (click)="sort('id')">ID
+                    <span *ngIf="searchQuery.sortBy ==='id'">
+                        <span *ngIf="searchQuery.sortType==='asc'">
+                            <i-bs name="arrow-up"></i-bs>
+                        </span>
+                        <span *ngIf="searchQuery.sortType==='desc'">
+                            <i-bs name="arrow-down"></i-bs>
+                        </span>
+                    </span>
+                </th>
+                <th class="table-sort" (click)="sort('date')">Date
+                    <span *ngIf="searchQuery.sortBy ==='date'">
+                        <!-- up arrow icon-->
+                        <span *ngIf="searchQuery.sortType==='asc'">
+                            <i-bs name="arrow-up"></i-bs>
+                        </span>
+                        <!-- down arrow icon-->
+                        <span *ngIf="searchQuery.sortType==='desc'">
+                            <i-bs name="arrow-down"></i-bs>
+                        </span>
+                    </span>
+                </th>
+                <th class="table-sort" (click)="sort('Comments')">Comments
+                    <span *ngIf="searchQuery.sortBy ==='Comments'">
+                        <span *ngIf="searchQuery.sortType==='asc'">
+                            <i-bs name="arrow-up"></i-bs>
+                        </span>
+                        <span *ngIf="searchQuery.sortType==='desc'">
+                            <i-bs name="arrow-down"></i-bs>
+                        </span>
+                    </span>
+                </th>
+                <th [width]="150" class="table-sort" (click)="sort('status')">Status
+                    <span *ngIf="searchQuery.sortBy ==='status'">
+                        <span *ngIf="searchQuery.sortType==='asc'">
+                            <i-bs name="arrow-up"></i-bs>
+                        </span>
+                        <span *ngIf="searchQuery.sortType==='desc'">
+                            <i-bs name="arrow-down"></i-bs>
+                        </span>
+                    </span>
+                </th>
+                <th [width]="130">Action</th>
+            </tr>
+        </thead>
+        <div *ngIf="loading">
+            <app-loader [loader]="loading"></app-loader>
+        </div>
+        <tbody *ngIf="!loading && transactions.length > 0">
+            <tr *ngFor="let transaction of transactions">
+                <td>{{transaction?.id}}</td>
+                <td>{{transaction?.date | date:'dd/MM/yyyy'}}</td>
+                <td>{{transaction?.Comments}}</td>
+                <td>
+                    <span class="badge rounded-pill" [ngClass]="{'text-bg-success': transaction?.status ==='COMPLETED', 
                     'text-bg-primary':transaction?.status ==='IN-PROGRESS',
                     'text-bg-danger':transaction?.status ==='REJECTED',
                     'text-bg-secondary':transaction?.status ==='PENDING'}">
-                    {{transaction?.status}}
-                </span>
-            </td>
-            <td>
-                <button type="button" class="btn btn-link" (click)="goToTransactionDetail(transaction)">View</button>
-            </td>
-        </tr>
-    </tbody>
-    <div *ngIf="!loading && transactions.length === 0">No Transaction Available.</div>
-</table>
+                        {{transaction?.status}}
+                    </span>
+                </td>
+                <td>
+                    <button type="button" class="btn btn-link"
+                        (click)="goToTransactionDetail(transaction)">View</button>
+                </td>
+            </tr>
+        </tbody>
+        <div *ngIf="!loading && transactions.length === 0">No Transaction Available.</div>
+    </table>
+</div>
+<div *ngIf="showChildOnly">
+    <router-outlet></router-outlet>
+</div>

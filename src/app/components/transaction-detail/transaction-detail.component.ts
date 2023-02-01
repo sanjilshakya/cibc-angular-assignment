@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { TransactionService } from 'src/app/services';
+import { DataService, TransactionService } from 'src/app/services';
 import { senders, recipients, status } from '../../constants/mock-data.constant';
 import * as moment from 'moment';
 import { finalize } from 'rxjs';
@@ -16,6 +16,7 @@ export class TransactionDetailComponent implements OnInit {
   constructor(private route: ActivatedRoute,
     private router: Router,
     private formBuilder: FormBuilder,
+    private dataService: DataService,
     private transactionService: TransactionService) {
     this.setTransactionForm();
   }
@@ -65,6 +66,8 @@ export class TransactionDetailComponent implements OnInit {
     const request = reqBody._id ? this.transactionService.update(reqBody) : this.transactionService.create(reqBody)
     request.subscribe({
       next: (res) => {
+        res.date = new Date(res.date)
+        this.dataService.sendData({ res, showChildOnly: false })
         this.router.navigate(['/'])
       },
       error: (e) => console.error(e)
