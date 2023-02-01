@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
+import { NavigationStart, Router } from '@angular/router';
 import * as moment from 'moment';
-import { finalize } from 'rxjs';
-import { TransactionService } from 'src/app/services';
+import { finalize, Subscription } from 'rxjs';
+import { DataService, TransactionService } from 'src/app/services';
 
 @Component({
   selector: 'app-transaction-list',
@@ -12,9 +12,10 @@ import { TransactionService } from 'src/app/services';
 })
 export class TransactionListComponent implements OnInit {
 
-  transactions: any;
+  transactions!: any[];
   sortBy = 'asc';
   loading = false;
+  showChildOnly = false;
   minDate!: String;
   maxDate!: String;
   form!: FormGroup;
@@ -24,15 +25,42 @@ export class TransactionListComponent implements OnInit {
     sortBy: 'date',
     sortType: 'asc'
   }
+  subscription: Subscription;
 
   constructor(private router: Router,
     private formBuilder: FormBuilder,
+    private dataService: DataService,
     private transactionService: TransactionService) {
     this.setAdvanceFilterForm()
+    this.router.events.subscribe((event) => {
+      if (event instanceof NavigationStart) {
+        if (event.url === '/transactions' || event.url === '/') {
+          this.showChildOnly = false
+        }
+      }
+    })
+    this.subscription = this.dataService.getData().subscribe(data => {
+      if (data && data.res) {
+        const index = this.transactions.findIndex(x => x._id === data.res._id)
+        if (index >= 0)
+          this.transactions[index] = data.res;
+        else this.transactions.push(data.res)
+        this.showChildOnly = data.showChildOnly
+      }
+    });
   }
 
   ngOnInit(): void {
-    this.getTransactions()
+    this.getTransactions();
+    if (this.router.url !== '/transactions') {
+      let id: any = this.router.url.replace('/transactions/', '')
+      if (id === 'create') id = null
+      this.goToTransactionDetail({ _id: id })
+    }
+  }
+
+  ngOnDestroy() {
+    this.subscription.unsubscribe();
   }
 
   setAdvanceFilterForm() {
@@ -73,7 +101,8 @@ export class TransactionListComponent implements OnInit {
   }
 
   goToTransactionDetail(transaction?: any) {
-    transaction ? this.router.navigate(['transactions/' + transaction._id]) : this.router.navigate(['transactions/create'])
+    transaction && transaction._id ? this.router.navigate(['transactions/' + transaction._id]) : this.router.navigate(['transactions/create'])
+    this.showChildOnly = true
   }
 
   sort(field: string) {
